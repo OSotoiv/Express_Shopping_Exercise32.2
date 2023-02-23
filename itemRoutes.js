@@ -18,7 +18,7 @@ router.post("/", function (req, res, next) {
         const { item_name, item_price } = req.body;
         const item = new Item(item_name, item_price);
         item.save()
-        return res.json(item);
+        return res.json({ created: item });
     } catch (e) {
         next(e)
     }
@@ -60,6 +60,8 @@ router.delete("/:name", function (req, res, next) {
         next(e)
     }
 });
+
+
 //if you try to make a delete request to / you get a 404
 //how should you handle request methods that you have not defined? 
 module.exports = router;
