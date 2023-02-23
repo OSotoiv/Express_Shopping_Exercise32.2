@@ -33,6 +33,7 @@ npm init
 }
 ```
 #### POST http://localhost:3000/items
+* Send the item you want to add to the list
 * Accepts JSON or Form URL Encoded
 ```
 {
