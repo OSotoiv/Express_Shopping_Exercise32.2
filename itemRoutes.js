@@ -1,10 +1,10 @@
-const { Router } = require('express')
+const { Router } = require('express');
 const router = Router();
-const { Item } = require('./item')
+const { Item } = require('./itemClass');
+const { ExpressError } = require('./custom_errors')
 
 router.get("/", function (req, res, next) {
-    try {
-        //gets all items from fake database
+    try {//gets all items from fake database
         const items = Item.getAll()
         return res.json({ items: items });
     } catch (e) {
@@ -13,8 +13,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/", function (req, res, next) {
-    //save item to fake data base
-    try {
+    try {//save item to fake database
         const { item_name, item_price } = req.body;
         const item = new Item(item_name, item_price);
         item.save()
@@ -26,7 +25,7 @@ router.post("/", function (req, res, next) {
 });
 
 router.get("/:name", function (req, res, next) {
-    try {
+    try {//gets item by name
         const { name } = req.params;
         const item = Item.searchByName(name);
         return res.json({ item: item });
@@ -35,7 +34,7 @@ router.get("/:name", function (req, res, next) {
     }
 });
 router.patch("/:name", function (req, res, next) {
-    try {
+    try {//update an item by name...price will default to original price if omitted
         const { name: original_name } = req.params;
         const { new_name, new_price } = req.body;
         const item = Item.updateByName(original_name, new_name, new_price);
@@ -49,19 +48,26 @@ router.delete("/:name", function (req, res, next) {
     try {
         const { name } = req.params;
         const item = Item.searchByName(name);
-        if (item.delete()) {
-            return res.json({ delted_item: item });
-        } else {
-            return res.json({ error: "item not found" })
-        }
+        item.delete()
+        return res.json({ delted_item: item });
+        // if (item.delete()) {
+        //     return res.json({ delted_item: item });
+        // } else {
+        //     return res.json({ error: "item not found" })
+        // }
     } catch (e) {
-        e.msg = e.message;
-        e.status = 400;
         next(e)
     }
 });
+//this error is for routes that start with /items but doesnt match any other part of the request
+router.use((req, res, next) => {
+    return next(new ExpressError('I dont know that Item', 404))
+})
 
-
+//Express has a default error handler
 //if you try to make a delete request to / you get a 404
 //how should you handle request methods that you have not defined? 
+//can you make it so that the route acepts a list of items to add? 
+//error handling needs work
+
 module.exports = router;
