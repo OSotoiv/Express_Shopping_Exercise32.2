@@ -50,7 +50,7 @@ class Item {
 
         item.name = new_name;
         item.price = parseFloat(new_price) || item.price
-        return item;
+        return new Item(item.name, item.price);
     }
 }
 
