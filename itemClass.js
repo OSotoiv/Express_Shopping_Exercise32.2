@@ -4,12 +4,12 @@ const items_DB = require('./fakeDb');
 //Item class calls the fake Database for getting,adding,updating,deleting items 
 class Item {
     constructor(name, price) {
-        this.name = name;
-        this.price = parseFloat(price);
         //input validation
-        if (!this.price || !this.name) {
-            throw new ExpressError('name and price are required', 400)
+        if (!parseFloat(price) || !name.trim()) {
+            throw new ExpressError('name as a string and price as a number are required', 400)
         }
+        this.name = name.trim();
+        this.price = parseFloat(price);
     }
     save() {
         const item = {
