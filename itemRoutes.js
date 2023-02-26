@@ -17,7 +17,7 @@ router.post("/", function (req, res, next) {
         const { item_name, item_price } = req.body;
         const item = new Item(item_name, item_price);
         item.save()
-        return res.json({ created: item });
+        return res.status(201).json({ created: item });
     } catch (e) {
         next(e)
     }
